@@ -288,14 +288,18 @@ foreach ($arquivo in Get-ChildItem $folder) {
 Write-Host "---------------------------------------------------------" 
 Write-Host "Compactando arquivos no arquivo: C:\temp\ADSecurity\ADSecOutput.zip" -ForegroundColor Yellow
 Write-Host "---------------------------------------------------------" 
-#zipar arquivos
-$zipFilePath = "$folder\ADSecOutput.zip"
+# Verificar se o arquivo ADSecOutput.zip já existe e removê-lo se necessário
+$timestamp = Get-Date -Format "yyyyMMddHHmmss"
+$zipFilePath = "$folder\ADSecOutput_$timestamp.zip"
+if (Test-Path $zipFilePath) {
+    Remove-Item $zipFilePath -Force
+    Write-Host "Arquivo ADSecOutput.zip antigo removido." -ForegroundColor Yellow
+}
+
+# Zipar arquivos
 Add-Type -AssemblyName 'System.IO.Compression.FileSystem'
 Start-Sleep -Seconds 5 # Ensure all file operations are completed
-if (Test-Path $zipFilePath) {
-    Remove-Item $zipFilePath
-}
-$filesToZip = Get-ChildItem -Path $folder -Exclude "ADSecOutput.zip"
+$filesToZip = Get-ChildItem -Path $folder -Exclude "ADSecOutput_*.zip"
 $zip = [System.IO.Compression.ZipFile]::Open($zipFilePath, [System.IO.Compression.ZipArchiveMode]::Create)
 foreach ($file in $filesToZip) {
     [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $file.FullName, $file.Name)
