@@ -6,13 +6,13 @@ Repositório criado para conter scripts de coleta de informações do AD.
 - PowerShell 5.1 ou superior
 - Permissões de administrador no PowerShell
 - Permissões necessárias para coletar informações do Active Directory
-**- Caso haja mais de um domínio na mesma floresta, este script deverá ser executado em cada Domain Controller de cada Domínio**
+- **Caso haja mais de um domínio na mesma floresta, este script deverá ser executado em cada Domain Controller de cada Domínio**
 
 ## Como usar o script ADSecAssessment.ps1
 
 1. Clone o repositório para o seu ambiente local:
     ```sh
-    git clone https://github.com/seu-usuario/ADAssessment.git
+    git clone https://github.com/bokanrb/ADAssessment.git
     ```
 
 2. Navegue até o diretório do repositório clonado:
@@ -26,3 +26,5 @@ Repositório criado para conter scripts de coleta de informações do AD.
     ```
 
 4. Siga as instruções exibidas pelo script para coletar as informações do Active Directory.
+
+5. Colete o arquivo .zip gerado na pasta C:\temp\ADSecurity após finalização do script.
