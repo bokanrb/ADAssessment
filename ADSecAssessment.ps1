@@ -61,6 +61,9 @@ $Guest = Get-ADUser -Filter {SamAccountName -eq "Guest"} -Properties Enabled
 $inativos = Search-ADAccount -AccountInactive -UsersOnly -DateTime $180daysAgo -ResultSetSize $null | Where-Object { $_.Enabled -eq $True }
 $tinativos = $inativos.Count
 
+$PrivGroups = Get-ADGroup -Filter * -Properties ManagedBy | Where-Object { ($_."ManagedBy" -ne $null) -or ($_."Name" -like "*admin*") } | Select-Object Name, ManagedBy
+$tPrivGroups = $PrivGroups.Count
+
 #--------------------------------------------------------------------#
 # Variaveis de coleta de informações sobre a politica de senha do AD #
 #--------------------------------------------------------------------#
@@ -133,6 +136,7 @@ Write-Host "Quantidade de computadores............:" -ForegroundColor white -NoN
 Write-Host "Quantidade de domain controllers......:" -ForegroundColor white -NoNewLine; Write-Host " $($domainControllers.name.ToString().count) " -ForegroundColor Green 
 Write-Host "Quantidade de grupos..................:" -ForegroundColor white -NoNewLine; Write-Host " $GroupsCount" -ForegroundColor Green
 Write-Host "Quantidade de OUs.....................:" -ForegroundColor white -NoNewLine; Write-Host " $OUsCount" -ForegroundColor Green
+Write-Host "Quantidade de Grupos Privilegiados....:" -ForegroundColor white -NoNewLine; Write-Host " $tPrivGroups" -ForegroundColor Green
 Write-Host "---------------------------------------------------------" 
 Write-Host "INFORMAÇÕES DE OBJETOS (CSV)" -ForegroundColor Yellow
 Write-Host "---------------------------------------------------------" 
@@ -188,7 +192,8 @@ RESUMO DAS INFORMAÇÕES DO ACTIVE DIRECTORY
  Quantidade de computadores............: $ComputersCount 
  Quantidade de domain controllers......: $($domainControllers.name.ToString().count)
  Quantidade de grupos..................: $GroupsCount 
- Quantidade de OUs.....................: $OUsCount 
+ Quantidade de OUs.....................: $OUsCount
+ Quantidade de Grupos Privilegiados ...: $tPrivGroups  
  ---------------------------------------------------------  
  INFORMAÇÕES DE OBJETOS (CSV) 
  --------------------------------------------------------- 
@@ -251,6 +256,7 @@ $jsonData = @(
     @{ FileName = "usuarios-inativos.json"; Data = $inativos }
     @{ FileName = "usuarios-remotedesktop.json"; Data = $privilegedRemoteDesktopUsers }
     @{ FileName = "SystemInfo.json"; Data = $systemInfo }
+    @{ FileName = "PrivGroupsNaoPadrao.json"; Data = $PrivGroups }
 )
 
 foreach ($item in $jsonData) {
