@@ -240,39 +240,39 @@ RESUMO DAS INFORMAÇÕES DO ACTIVE DIRECTORY
 $bloco | Add-Content "$folder\ADSecAssessment-Overview.txt"
 
 # ----------------------------------------- #
-# Exportação de informações no formato JSON. #
+# Exportação de informações no formato CSV. #
 # ----------------------------------------- #
-$jsonData = @(
-    @{ FileName = "users-password-never-expire.json"; Data = $userspne }
-    @{ FileName = "users-domain-admins.json"; Data = $usersadmin }
-    @{ FileName = "users-domain-administrators.json"; Data = $usersadmin1 }
-    @{ FileName = "users-enterprise-admins.json"; Data = $usersadmin2 }
-    @{ FileName = "users-disabled.json"; Data = $usersdisabled }
-    @{ FileName = "users-not-logged-on-180-days.json"; Data = $users180dias }
-    @{ FileName = "users-sidhistory.json"; Data = $userssidhistory }
-    @{ FileName = "AdminsdHolder.json"; Data = $AdminsdHolder }
-    @{ FileName = "Kerbdelegation.json"; Data = $kerbdelegation }
-    @{ FileName = "PrintSpoolerEnabled.json"; Data = $spoolerEnabled }
-    @{ FileName = "usuarios-inativos.json"; Data = $inativos }
-    @{ FileName = "usuarios-remotedesktop.json"; Data = $privilegedRemoteDesktopUsers }
-    @{ FileName = "SystemInfo.json"; Data = $systemInfo }
-    @{ FileName = "PrivGroupsNaoPadrao.json"; Data = $PrivGroups }
+$csvData = @(
+    @{ FileName = "users-password-never-expire.csv"; Data = $userspne }
+    @{ FileName = "users-domain-admins.csv"; Data = $usersadmin }
+    @{ FileName = "users-domain-administrators.csv"; Data = $usersadmin1 }
+    @{ FileName = "users-enterprise-admins.csv"; Data = $usersadmin2 }
+    @{ FileName = "users-disabled.csv"; Data = $usersdisabled }
+    @{ FileName = "users-not-logged-on-180-days.csv"; Data = $users180dias }
+    @{ FileName = "users-sidhistory.csv"; Data = $userssidhistory }
+    @{ FileName = "AdminsdHolder.csv"; Data = $AdminsdHolder }
+    @{ FileName = "Kerbdelegation.csv"; Data = $kerbdelegation }
+    @{ FileName = "PrintSpoolerEnabled.csv"; Data = $spoolerEnabled }
+    @{ FileName = "usuarios-inativos.csv"; Data = $inativos }
+    @{ FileName = "usuarios-remotedesktop.csv"; Data = $privilegedRemoteDesktopUsers }
+    @{ FileName = "SystemInfo.csv"; Data = $systemInfo }
+    @{ FileName = "PrivGroupsNaoPadrao.csv"; Data = $PrivGroups }
 )
 
-foreach ($item in $jsonData) {
-    $item.Data | ConvertTo-Json -Depth 3 | Out-File -FilePath "$folder\$($item.FileName)" -Encoding UTF8
+foreach ($item in $csvData) {
+    $item.Data | Export-Csv -Path "$folder\$($item.FileName)" -NoTypeInformation -Encoding UTF8
 }
 
-# Validação de arquivos JSON.
-$jsonFiles = Get-ChildItem -Path $folder -Filter "*.json" -Recurse
+# Validação de arquivos CSV.
+$csvFiles = Get-ChildItem -Path $folder -Filter "*.csv" -Recurse
 
 Write-Host "---------------------------------------------------------" 
-Write-Host "Iniciando a geração de arquivos .json" -ForegroundColor Yellow
+Write-Host "Iniciando a geração de arquivos .csv" -ForegroundColor Yellow
 Write-Host "---------------------------------------------------------" 
-if ($jsonFiles) {
-    Write-Host "$($jsonFiles.Count) Arquivos .json criados com sucesso" -ForegroundColor Green
+if ($csvFiles) {
+    Write-Host "$($csvFiles.Count) Arquivos .csv criados com sucesso" -ForegroundColor Green
 } else {
-    Write-Host "Não foi possivel gravar os arquivos .json na pasta $folder" -ForegroundColor Red
+    Write-Host "Não foi possivel gravar os arquivos .csv na pasta $folder" -ForegroundColor Red
 }
 
 Write-Host "---------------------------------------------------------" 
