@@ -1,16 +1,27 @@
-# Verificar se o módulo Microsoft.Graph está instalado
+# Verificar se o módulo Microsoft.Graph e Az.KeyVault estão instalados
 if (-not (Get-Module -ListAvailable -Name Microsoft.Graph)) {
     Install-Module -Name Microsoft.Graph -Force -Scope CurrentUser
 }
+if (-not (Get-Module -ListAvailable -Name Az.KeyVault)) {
+    Install-Module -Name Az.KeyVault -Force -Scope CurrentUser
+}
 
-# Importar o módulo Microsoft.Graph
+# Importar os módulos
 Import-Module Microsoft.Graph
+Import-Module Az.KeyVault
+
+# Autenticar no Azure
+Connect-AzAccount
+
+# Nome do Key Vault
+$keyVaultName = "AKVTeste"
+
+# Buscar segredos do Key Vault
+$clientId = (Get-AzKeyVaultSecret -VaultName $keyVaultName -Name "ClientId").SecretValueText
+$tenantId = (Get-AzKeyVaultSecret -VaultName $keyVaultName -Name "TenantId").SecretValueText
+$clientSecret = (Get-AzKeyVaultSecret -VaultName $keyVaultName -Name "ClientSecret").SecretValueText
 
 # Autenticar usando token
-$clientId = "11ab9437-7fb7-466b-8af4-5228ff007bc4"
-$tenantId = "eef8c4da-7697-42f0-84b5-79f727136d69"
-$clientSecret = "ag38Q~pIxhb2-Nxr_oJmBBpyEVE85-nxclncCdlr"
-
 $body = @{
     client_id     = $clientId
     scope         = "https://graph.microsoft.com/.default"
