@@ -7,9 +7,9 @@ if (-not (Get-Module -ListAvailable -Name Microsoft.Graph)) {
 Import-Module Microsoft.Graph
 
 # Autenticar usando token
-#$clientId = "ENTER HERE"
-#$tenantId = "ENTER HERE"
-#$clientSecret = "ENTER HERE"
+$clientId = "11ab9437-7fb7-466b-8af4-5228ff007bc4"
+$tenantId = "eef8c4da-7697-42f0-84b5-79f727136d69"
+$clientSecret = "ag38Q~pIxhb2-Nxr_oJmBBpyEVE85-nxclncCdlr"
 
 $body = @{
     client_id     = $clientId
