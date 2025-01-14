@@ -1,4 +1,3 @@
-#---#
 Import-Module ActiveDirectory
 Clear-Host
 
@@ -244,37 +243,44 @@ $bloco | Add-Content "$folder\ADSecAssessment-Overview.txt"
 # Exportação de informações no formato CSV. #
 # ----------------------------------------- #
 $csvData = @(
-    @{ FileName = "users-password-never-expire.csv"; Data = $userspne }
-    @{ FileName = "users-domain-admins.csv"; Data = $usersadmin }
-    @{ FileName = "users-domain-administrators.csv"; Data = $usersadmin1 }
-    @{ FileName = "users-enterprise-admins.csv"; Data = $usersadmin2 }
-    @{ FileName = "users-disabled.csv"; Data = $usersdisabled }
-    @{ FileName = "users-not-logged-on-180-days.csv"; Data = $users180dias }
-    @{ FileName = "users-sidhistory.csv"; Data = $userssidhistory }
-    @{ FileName = "AdminsdHolder.csv"; Data = $AdminsdHolder }
-    @{ FileName = "Kerbdelegation.csv"; Data = $kerbdelegation }
-    @{ FileName = "PrintSpoolerEnabled.csv"; Data = $spoolerEnabled }
-    @{ FileName = "usuarios-inativos.csv"; Data = $inativos }
-    @{ FileName = "usuarios-remotedesktop.csv"; Data = $privilegedRemoteDesktopUsers }
-    @{ FileName = "SystemInfo.csv"; Data = $systemInfo }
-    @{ FileName = "PrivGroupsNaoPadrao.csv"; Data = $PrivGroups }
+    @{ Name = "UsersWithPasswordNeverExpire"; Data = $userspne }
+    @{ Name = "DomainAdmins"; Data = $usersadmin }
+    @{ Name = "Administrators"; Data = $usersadmin1 }
+    @{ Name = "EnterpriseAdmins"; Data = $usersadmin2 }
+    @{ Name = "DisabledUsers"; Data = $usersdisabled }
+    @{ Name = "UsersNotLoggedOn180Days"; Data = $users180dias }
+    @{ Name = "UsersWithSIDHistory"; Data = $userssidhistory }
+    @{ Name = "AdminsdHolder"; Data = $AdminsdHolder }
+    @{ Name = "KerberosDelegation"; Data = $kerbdelegation }
+    @{ Name = "PrintSpoolerEnabled"; Data = $spoolerEnabled }
+    @{ Name = "InactiveUsers"; Data = $inativos }
+    @{ Name = "RemoteDesktopUsers"; Data = $privilegedRemoteDesktopUsers }
+    @{ Name = "SystemInfo"; Data = $systemInfo }
+    @{ Name = "PrivilegedGroups"; Data = $PrivGroups }
 )
 
+# Criar uma lista de objetos combinados
+$combinedData = @()
+
+# Iterar sobre cada conjunto de dados para combinar
 foreach ($item in $csvData) {
-    $item.Data | Export-Csv -Path "$folder\$($item.FileName)" -NoTypeInformation -Encoding UTF8
+    foreach ($entry in $item.Data) {
+        $combinedData += [PSCustomObject]@{
+            Category = $item.Name
+            Name     = $entry.DisplayName
+            SamAccountName = $entry.SamAccountName
+            LastLogon = $entry.LastLogonTimeStamp
+            OtherInfo = $entry.PasswordLastSet
+        }
+    }
 }
 
-# Validação de arquivos CSV.
-$csvFiles = Get-ChildItem -Path $folder -Filter "*.csv" -Recurse
+# Exportar todos os dados combinados para um CSV
+$combinedData | Export-Csv -Path "$folder\Combined_AD_Security_Information.csv" -NoTypeInformation -Encoding UTF8
 
 Write-Host "---------------------------------------------------------" 
-Write-Host "Iniciando a geração de arquivos .csv" -ForegroundColor Yellow
-Write-Host "---------------------------------------------------------" 
-if ($csvFiles) {
-    Write-Host "$($csvFiles.Count) Arquivos .csv criados com sucesso" -ForegroundColor Green
-} else {
-    Write-Host "Não foi possivel gravar os arquivos .csv na pasta $folder" -ForegroundColor Red
-}
+Write-Host "Arquivo CSV combinado gerado com sucesso." -ForegroundColor Green
+Write-Host "---------------------------------------------------------"
 
 Write-Host "---------------------------------------------------------" 
 Write-Host "Validação de hash dos arquivos" -ForegroundColor Yellow
