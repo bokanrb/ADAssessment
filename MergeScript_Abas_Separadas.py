@@ -4,7 +4,7 @@ from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 
 # Defina o diretório onde seus arquivos CSV estão localizados
-diretorio = r'C:\Users\leonardo.keller\Downloads\ADSecOutput\ADSecOutput'
+diretorio = r'C:\\Users\\leonardo.keller\\Downloads\\ADSecOutput\\ADSecOutput'
 
 # Lista para armazenar (DataFrame, nome_arquivo)
 dfs = []
@@ -25,10 +25,10 @@ for arquivo in os.listdir(diretorio):
                 # Guardar o DataFrame junto com o nome do arquivo
                 dfs.append((df, arquivo))
             else:
-                print(f"Aviso: O arquivo '{arquivo}' está vazio e foi ignorado.")
+                print(f"Aviso: O arquivo '{arquivo}' está vazio.")
         
         except pd.errors.EmptyDataError:
-            print(f"Aviso: O arquivo '{arquivo}' não contém dados válidos e foi ignorado.")
+            print(f"Aviso: O arquivo '{arquivo}' não contém dados válidos")
         except Exception as e:
             print(f"Erro ao processar o arquivo '{arquivo}': {e}")
 
@@ -37,14 +37,15 @@ if dfs:
     # Cria um novo Workbook
     wb = Workbook()
     
-    # Remover a primeira aba padrão criada automaticamente (opcional)
+    # Remover a primeira aba padrão criada automaticamente (opcional e preferível)
     wb.remove(wb.active)
 
     # Para cada (df, arquivo) na lista
     for df, arquivo in dfs:
-        # Extrair o nome do arquivo sem extensão
+        # Extrair o nome do arquivo sem extensão e informar quais arquivos estão sendo processados
         nome_arquivo_sem_extensao = os.path.splitext(arquivo)[0]
-        
+        print(f"Arquivo processado: {nome_arquivo_sem_extensao}")
+
         # Criar uma nova aba com o nome do arquivo (máximo 31 caracteres no Excel)
         ws = wb.create_sheet(title=nome_arquivo_sem_extensao[:31])
         
