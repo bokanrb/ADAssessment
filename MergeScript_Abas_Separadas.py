@@ -3,16 +3,6 @@ import os
 from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 
-def gerar_cor_aleatoria():
-    """Retorna uma cor aleatória (hex) dentre uma lista pré-definida."""
-    import random
-    cores = [
-        'FF0000', '00FF00', '0000FF', 'FFFF00',
-        'FF00FF', '00FFFF', 'FFC0CB', '8A2BE2',
-        'A52A2A', '5F9EA0'
-    ]
-    return random.choice(cores)
-
 # Defina o diretório onde seus arquivos CSV estão localizados
 diretorio = r'C:\Users\leonardo.keller\Downloads\ADSecOutput\ADSecOutput'
 
