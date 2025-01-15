@@ -20,7 +20,7 @@ for arquivo in os.listdir(diretorio):
             # Verificar se o DataFrame está vazio
             if not df.empty:
                 # (Opcional) Inserir uma coluna em branco na primeira posição
-                df.insert(0, '', '')
+                # df.insert(0, '', '')
                 
                 # Guardar o DataFrame junto com o nome do arquivo
                 dfs.append((df, arquivo))
